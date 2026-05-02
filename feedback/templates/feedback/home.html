@@ -1,0 +1,163 @@
+{% extends 'feedback/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center mb-5 pt-4">
+    <div class="col-md-7 text-center text-md-start mb-4 mb-md-0" data-aos="fade-right">
+        <h1 class="display-4 fw-bolder mb-2 poster-title" style="letter-spacing: 2px;">DASHBOARD</h1>
+        <p class="fs-5 mb-0 fw-medium" style="color: rgba(240,253,244,0.7);">Aggregated encrypted system logs.</p>
+    </div>
+    <div class="col-md-5 text-center text-md-end" data-aos="fade-left" data-aos-delay="200">
+        {% if avg_rating %}
+        <div class="d-inline-flex flex-column align-items-start glass-panel p-4 cursor-hover rounded-1 dashboard-stat-pulse">
+            <span class="text-uppercase fw-bold"
+                style="letter-spacing: 1px; font-size: 0.75rem; color: rgba(240,253,244,0.6);">
+                System Integrity
+            </span>
+            <div class="display-4 fw-bolder d-flex align-items-center mb-0 lh-1 mt-1"
+                style="font-family: 'Outfit';">
+                {{ avg_rating }}
+                <span class="ms-3 fs-3" style="color: var(--primary);">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="glass-panel p-3 mb-5 rounded-1" data-aos="fade-up" data-aos-delay="400">
+    <form method="get" class="row g-3 align-items-center">
+        <div class="col-md-4">
+            <div class="form-floating">
+                <input type="text" name="search" class="form-control glass-input cursor-hover" id="searchFeedback"
+                    placeholder="Search entity..." value="{{ search_query }}">
+                <label for="searchFeedback"><i class="bi bi-search me-2"></i> Query database...</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select name="category" class="form-select glass-input cursor-hover" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.name }}" {% if cat.is_selected %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="categoryFilter"><i class="bi bi-tag-fill me-2"></i> Section</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select name="sort" class="form-select glass-input cursor-hover" id="sortFilter">
+                    {% for so in sort_options %}
+                    <option value="{{ so.value }}" {% if so.is_selected %}selected{% endif %}>
+                        {{ so.label }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="sortFilter"><i class="bi bi-sort-down me-2"></i> Arrange By</label>
+            </div>
+        </div>
+        <div class="col-md-2 d-grid h-100">
+            <button type="submit"
+                class="btn btn-glass btn-lg h-100 d-flex align-items-center justify-content-center cursor-hover">
+                <i class="bi bi-filter me-2"></i> Refine
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="row g-4 position-relative z-1 feedback-container">
+    {% for fb in page_obj %}
+    <div class="col-md-6 col-lg-4" data-aos="fade-up">
+        <div class="glass-panel skeleton h-100 p-4 d-flex flex-column cursor-hover rounded-1">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <span
+                    class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 py-2 px-3 fw-bold"
+                    style="border-radius: 2px;">
+                    {{ fb.category }}
+                </span>
+                <div class="d-flex gap-1" style="color: var(--primary);">
+                    {% for i in '12345'|make_list %}
+                    {% if forloop.counter <= fb.rating %} <i class="bi bi-star-fill shadow-sm"></i>
+                        {% else %}
+                        <i class="bi bi-star" style="color: #333;"></i>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+            </div>
+            <h4 class="fw-bold mb-1" style="font-family: 'Outfit';">
+                {{ fb.target }}
+            </h4>
+            <p class="small mb-4 fw-medium" style="color: rgba(240,253,244,0.6);">
+                <i class="bi bi-clock me-1"></i>
+                {{ fb.created_at|date:"M d, Y" }}
+            </p>
+            <div class="flex-grow-1 position-relative">
+                <p class="lh-base mb-0 z-1 position-relative fs-6 fw-light" style="color: rgba(240,253,244,0.9);">
+                    {{ fb.message }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 py-5 my-5 z-1" data-aos="zoom-in">
+        <div class="text-center glass-panel p-5 mx-auto rounded-1" style="max-width: 600px;">
+            <div class="display-1 mb-3" style="color: rgba(240,253,244,0.4);"><i class="bi bi-database-fill-x"></i></div>
+            <h2 class="fw-bold mb-2" style="font-family: 'Outfit';">System records are empty.</h2>
+            <p class="mb-4 fs-6 fw-medium" style="color: rgba(240,253,244,0.7);">Awaiting initial data packet.</p>
+            <a href="{% url 'submit_feedback' %}"
+                class="btn btn-primary-custom px-5 py-3 fw-bold cursor-hover rounded-1">Submit Data</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav class="mt-5 pt-4 z-1 position-relative" aria-label="Feedback pagination" data-aos="fade-up" data-aos-offset="0">
+    <ul class="pagination justify-content-center gap-2">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link glass-panel border-0 d-flex align-items-center justify-content-center cursor-hover rounded-1"
+                style="width: 45px; height: 45px;"
+                href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">
+                <i class="bi bi-chevron-left" style="color: var(--text-main);"></i>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span
+                class="page-link glass-panel fw-bold border-0 d-flex align-items-center justify-content-center rounded-1"
+                style="background: rgba(74, 222, 128, 0.6) !important; border: 1px solid var(--primary) !important; width: 45px; height: 45px; color: var(--text-main);">
+                {{ num }}
+            </span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li class="page-item">
+            <a class="page-link glass-panel fw-medium border-0 d-flex align-items-center justify-content-center cursor-hover rounded-1"
+                style="width: 45px; height: 45px; color: var(--text-main);"
+                href="?page={{ num }}&search={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">
+                {{ num }}
+            </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link glass-panel border-0 d-flex align-items-center justify-content-center cursor-hover rounded-1"
+                    style="width: 45px; height: 45px;"
+                    href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">
+                    <i class="bi bi-chevron-right" style="color: var(--text-main);"></i>
+                </a>
+            </li>
+            {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

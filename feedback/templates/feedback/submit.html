@@ -1,0 +1,194 @@
+{% extends 'feedback/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row g-4 pb-5 z-index-1">
+    <!-- Rules / Protocol Section -->
+    <div class="col-lg-5" data-aos="fade-right" data-aos-duration="1000">
+        <div class="glass-panel p-4 p-md-5 h-100 rounded-1 border-primary border-opacity-25">
+            <div class="mb-4">
+                <div class="d-inline-flex rounded-circle p-2 mb-3" style="background: rgba(74, 222, 128, 0.1); border: 1px solid var(--primary);">
+                    <i class="bi bi-info-circle fs-4" style="color: var(--primary);"></i>
+                </div>
+                <h2 class="fw-bolder poster-title fs-3 mb-2">Submission Protocol</h2>
+                <p class="small text-uppercase fw-bold" style="color: var(--primary); letter-spacing: 2px;">Mandatory Guidelines for Students</p>
+            </div>
+
+            <div class="protocol-list">
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-chat-heart text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Be Respectful</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Use polite and professional language. Avoid abusive or offensive words. Criticism is welcome; disrespect is not.</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-shield-check text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Honest & Genuine</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Share your real experience only. No fake reviews (positive or negative). Avoid exaggeration or misleading info.</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-mortarboard text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Focus on Academics</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Discuss teaching quality, clarity, and punctuality. Avoid comments on lifestyle or appearance.</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-slash-circle text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">No Personal Attacks</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Do not target faculty personally. Keep it constructive, not harmful. No baseless accusations.</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-lock text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Privacy First</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Do not share personal details (phone numbers, addresses). Respect privacy of all entities at all times.</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-lightbulb text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Constructive Feedback</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Suggest improvements instead of just complaining. (e.g., "Use more real-life examples").</p>
+                    </div>
+                </div>
+
+                <div class="protocol-item d-flex gap-3 mb-4">
+                    <div class="protocol-icon mt-1"><i class="bi bi-patch-exclamation text-success"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">Zero Tolerance</h6>
+                        <p class="small mb-0" style="color: rgba(240, 253, 244, 0.85);">Strictly no hate speech, discrimination (gender, religion, caste), or spam. Stay relevant to academics.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-3 rounded bg-success bg-opacity-10 border border-success border-opacity-25">
+                <p class="small mb-0 fw-medium" style="color: var(--primary);">
+                    <i class="bi bi-check2-all me-1"></i> By proceeding, you agree to adhere to these protocols. Submissions violating these rules will be purged.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="col-lg-7">
+        <div class="glass-panel overflow-hidden position-relative rounded-1 h-100" data-aos="fade-left"
+            data-aos-duration="1000">
+
+            <div class="p-5 text-center position-relative z-1 border-bottom border-white border-opacity-10 pb-4">
+                <div class="d-inline-flex rounded-circle p-3 mb-3 shadow"
+                    style="background: rgba(74, 222, 128, 0.1); border: 1px solid var(--primary);">
+                    <i class="bi bi-shield-lock display-4" style="color: var(--primary);"></i>
+                </div>
+                <h2 class="fw-bolder mb-2 poster-title" style="letter-spacing: -1px;">Secure Submission</h2>
+                <p class="mb-0 fs-6 fw-medium text-uppercase" style="color: rgba(74, 222, 128, 0.8); letter-spacing: 1px;">Encrypted. Untraceable. Anonymous.</p>
+            </div>
+
+            <div class="p-4 p-md-5 position-relative z-1 pt-4">
+                <form method="post" action="{% url 'submit_feedback' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="form-floating">
+                            <select name="category" class="form-select glass-input cursor-hover" id="floatingSelect"
+                                required>
+                                <option value="" disabled selected></option>
+                                {% for cat in categories %}
+                                <option value="{{ cat }}">{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingSelect">Clearance Level / Category</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="form-floating">
+                            <select name="target" class="form-select glass-input cursor-hover" id="floatingTarget"
+                                required>
+                                <option value="" disabled selected></option>
+                                <option value="Ajith G S - Advanced Computer Networks">Ajith G S - Advanced Computer
+                                    Networks</option>
+                                <option value="Nimmy Francis - Advanced Database Management Systems">Nimmy Francis -
+                                    Advanced Database Management Systems</option>
+                                <option
+                                    value="Ann Mary Thomas - Advanced Web Programming and Digital Public Infrastructure">
+                                    Ann Mary Thomas - Advanced Web Programming and Digital Public Infrastructure
+                                </option>
+                                <option value="Lisha Varghese - Artificial Intelligence">Lisha Varghese - Artificial
+                                    Intelligence</option>
+                                <option value="Binumon Joseph - Object Oriented Programming Lab">Binumon Joseph - Object
+                                    Oriented Programming Lab</option>
+                                <option value="Merin Chacko - Advanced DBMS Lab">Merin Chacko - Advanced DBMS Lab
+                                </option>
+                                <option value="Amal K Jose - Mobile Application Development Lab">Amal K Jose - Mobile
+                                    Application Development Lab</option>
+                            </select>
+                            <label for="floatingTarget">Target Entity (Teacher & Subject)</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="form-floating">
+                            <textarea name="message" id="floatingMessage" class="form-control glass-input cursor-hover"
+                                style="height: 120px" placeholder="Write..." required></textarea>
+                            <label for="floatingMessage">Encrypted Payload</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" data-aos="fade-up" data-aos-delay="400">
+                        <p class="fw-bold small text-uppercase letter-spacing-1 ps-1 mb-2"
+                            style="color: rgba(240,253,244,0.6);">System Rating</p>
+                        <div
+                            class="d-flex justify-content-between align-items-center px-4 py-3 glass-input cursor-hover">
+                            <span class="fw-bold small z-1" style="color: rgba(240,253,244,0.5);">Critical</span>
+                            <div class="rating-input d-flex gap-2 flex-row-reverse z-1">
+                                {% for ropt in rating_options %}
+                                <div class="form-check form-check-inline mx-0 p-0 m-0">
+                                    {% if ropt.is_selected %}
+                                    <input class="form-check-input d-none star-radio" type="radio" name="rating"
+                                        id="rating{{ ropt.val }}" value="{{ ropt.val }}" checked>
+                                    {% else %}
+                                    <input class="form-check-input d-none star-radio" type="radio" name="rating"
+                                        id="rating{{ ropt.val }}" value="{{ ropt.val }}">
+                                    {% endif %}
+                                    <label class="form-check-label fs-3 star-label p-1 m-0 lh-1"
+                                        for="rating{{ ropt.val }}">
+                                        <i class="bi bi-star-fill"></i>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <span class="fw-bold small z-1"
+                                style="color: rgba(240,253,244,0.5);">Optimal</span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-5" data-aos="fade-up" data-aos-delay="500">
+                        <button type="submit"
+                            class="btn btn-primary-custom btn-lg py-3 shadow-lg fs-6 d-flex justify-content-center align-items-center cursor-hover">
+                            <i class="bi bi-fingerprint me-2 fs-5"></i> Encrypt & Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3 mb-5" data-aos="fade-up" data-aos-delay="600">
+    <a href="{% url 'home' %}" class="text-decoration-none fw-medium hover-bg-transition cursor-hover p-3"
+        style="color: rgba(240,253,244,0.7);">
+        <i class="bi bi-arrow-left me-1"></i> Return to Dashboard
+    </a>
+</div>
+{% endblock %}

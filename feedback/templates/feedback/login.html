@@ -1,0 +1,85 @@
+{% extends 'feedback/base.html' %}
+{% load static %}
+
+{% block title %}FacultyUnfiltered | Provide Credentials{% endblock %}
+
+{% block content %}
+<div class="row min-vh-75 align-items-center justify-content-center pt-5">
+    <div class="col-md-6 col-lg-5" data-aos="zoom-in">
+        <div class="glass-panel p-5 rounded-1">
+            <div class="text-center mb-4">
+                <i class="bi bi-shield-lock display-4" style="color: var(--primary);"></i>
+                <h2 class="fw-bolder mt-3" style="font-family: 'Outfit'; letter-spacing: 2px;">AUTHENTICATION
+                    REQUIRED</h2>
+                <p class="fw-medium text-muted">Awaiting secure handshake protocols.</p>
+            </div>
+
+            <div id="loginAlert"
+                class="alert alert-danger shadow-sm border border-success border-opacity-25 bg-success bg-opacity-10 d-none"
+                role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Invalid username or password
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control glass-input" id="usernameInput" placeholder="Username"
+                        required>
+                    <label for="usernameInput"><i class="bi bi-person-fill me-2"></i> Agent Identifier (Full Name)</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input type="password" class="form-control glass-input" id="passwordInput" placeholder="Password"
+                        required>
+                    <label for="passwordInput"><i class="bi bi-key-fill me-2"></i> Passcode</label>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary-custom py-3 fw-bold shadow-lg"
+                        style="letter-spacing: 1px;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> INITIALIZE SESSION
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const validUsers = [
+        "ABHILASH K K", "ABHINAND K K", "ABHINAND M A", "ABHINANTH S PILLAI", "ADONIA CYRUS",
+        "AKASH A", "AKSHAI RAJ", "ALBIN SURESH", "ALEENA ROBY", "ALFIYA ISMAIL", "ALKA MARIA JISS",
+        "AMAL S KUMAR", "ANAND S BOSCO", "ANANDHU PRADEEP", "ANGEL RENOY", "ANGELIN RAPHY",
+        "ANJALI SUNIL", "ANJALY V S", "ARUN BIJU THOMAS", "ARUN PAPPACHAN", "ATHULYA R MOHAN",
+        "BIYA JOMON", "BLESSON JOSEPH BYJU", "DARIL TOM JOSE", "DIYA SEBASTIAN", "EDSON EDWIN NINAN",
+        "ELIZABETH MATHEW", "FATHIMA IRFANA", "FEBA BIJU", "GAYATHRI M", "GOUTHAM SREEKUMAR",
+        "HAINES JOSE PAULSON", "HEINS DEVASIA", "JAGANATH SYAM", "JESTIN SHAJI", "JIBIN P CHACKO",
+        "JIDIN MATHEW", "JIYA THOMAS", "JOBIN JAMES", "JOSEKUTTY SHOBY", "JOSEPH MATHEW",
+        "KEERTHANA M", "KRISHNA DEEPESH", "LAMEES JALEEL", "LIYA MARY BIJU", "MAHI MANOJ M",
+        "MILAN M ANTONY", "MUHAMMED JASIR PP", "NAVEENA ELSA KOSHY", "NEHU SAM ABRAHAM",
+        "PRINCE ABRAHAM SHAJI", "RICH TOJI", "RINTA THOMAS", "SAINU ANNA SAJAN", "SIDHARTH S UPPOODAN",
+        "SNEHA M S", "SUBIN JOSEPH VARGHESE", "THEERDHA RAJU", "VISMAYA KOORMA", "VIVEK JOSEPH VATAVAYALIL"
+    ];
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('usernameInput').value.trim();
+        const password = document.getElementById('passwordInput').value.trim();
+        const alertBox = document.getElementById('loginAlert');
+
+        alertBox.classList.add('d-none');
+
+        // Check credentials mapping
+        // Case-insensitive comparison just in case, but preserving exact match as standard
+        const isValidUser = validUsers.some(u => u.toUpperCase() === username.toUpperCase());
+
+        if (isValidUser && password === "1234") {
+            // Correct credentials
+            localStorage.setItem('loggedInUser', username.toUpperCase());
+            window.location.href = "{% url 'home' %}";
+        } else {
+            // Invalid
+            alertBox.classList.remove('d-none');
+        }
+    }
+</script>
+{% endblock %}
