@@ -12,7 +12,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+import django.db.backends.mysql.base
+import django.db.backends.mysql.features
+
+# Bypass Django's MariaDB/MySQL version check for local development with older XAMPP
+django.db.backends.mysql.base.DatabaseWrapper.check_database_version_supported = lambda self: None
+django.db.backends.mysql.features.DatabaseFeatures.can_return_columns_from_insert = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'feedback',
 ]
 
@@ -82,17 +89,21 @@ WSGI_APPLICATION = 'feedback_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME', 'anonymous_feedback_db'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 
-# Replace the SQLite DATABASES configuration with PostgreSQL if on Render
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+# TiDB Cloud often requires an SSL connection.
+# We can enable it via an environment variable on Render.
+if os.environ.get('DB_USE_SSL') == 'True':
+    DATABASES['default']['OPTIONS'] = {
+        'ssl': {'ca': '/etc/ssl/certs/ca-certificates.crt'} # Standard Linux path for CA certs (used by Render)
+    }
 
 
 # Password validation
@@ -139,3 +150,13 @@ if not DEBUG:
 # Media files (Images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Cloudinary Configuration for Media Storage
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', '')
+}
+
+if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
