@@ -131,7 +131,11 @@
 
                                 {% if issue.image %}
                                 <div class="mt-3">
+                                    {% if "data:" in issue.image %}
                                     <img src="{{ issue.image }}" class="img-fluid rounded border border-success border-opacity-25" style="max-height: 200px;" alt="Attached Evidence">
+                                    {% else %}
+                                    <img src="/media/{{ issue.image }}" class="img-fluid rounded border border-success border-opacity-25" style="max-height: 200px;" alt="Attached Evidence">
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
