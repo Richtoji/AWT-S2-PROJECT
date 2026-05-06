@@ -131,9 +131,7 @@
 
                                 {% if issue.image %}
                                 <div class="mt-3">
-                                    <a href="{{ issue.image.url }}" target="_blank"
-                                        class="small text-success text-decoration-none cursor-hover"><i
-                                            class="bi bi-paperclip"></i> View Attached Evidence</a>
+                                    <img src="{{ issue.image }}" class="img-fluid rounded border border-success border-opacity-25" style="max-height: 200px;" alt="Attached Evidence">
                                 </div>
                                 {% endif %}
                             </div>

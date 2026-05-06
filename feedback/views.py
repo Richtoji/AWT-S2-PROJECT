@@ -3,6 +3,7 @@ from django.db.models import Avg, Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+import base64
 from .models import Feedback, Issue, Suggestion, CampusPhoto, PhotoComment, PhotoLike
 
 def landing(request):
@@ -116,7 +117,9 @@ def submit_issue(request):
                 priority=request.POST.get('priority', 'Medium')
             )
             if 'image' in request.FILES:
-                issue.image = request.FILES['image']
+                uploaded_file = request.FILES['image']
+                encoded_string = base64.b64encode(uploaded_file.read()).decode('utf-8')
+                issue.image = f"data:{uploaded_file.content_type};base64,{encoded_string}"
             issue.full_clean()
             issue.save()
             messages.success(request, 'Issue reported successfully!')
@@ -182,8 +185,10 @@ def upload_photo(request):
     if request.method == 'POST':
         if 'image' in request.FILES:
             try:
+                uploaded_file = request.FILES['image']
+                encoded_string = base64.b64encode(uploaded_file.read()).decode('utf-8')
                 photo = CampusPhoto(
-                    image=request.FILES['image'],
+                    image=f"data:{uploaded_file.content_type};base64,{encoded_string}",
                     caption=request.POST.get('caption', ''),
                     category=request.POST.get('category', 'Campus Life'),
                     uploader_pseudonym=request.POST.get('pseudonym', 'Anonymous Scholar')

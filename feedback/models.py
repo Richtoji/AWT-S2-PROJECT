@@ -58,7 +58,7 @@ class Issue(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     location = models.CharField(max_length=150)
     description = models.TextField()
-    image = models.ImageField(upload_to='issues/', blank=True, null=True)
+    image = models.TextField(blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='Medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -89,7 +89,7 @@ class CampusPhoto(models.Model):
         ('Other', 'Other')
     ]
 
-    image = models.ImageField(upload_to='campus_hub/')
+    image = models.TextField()
     caption = models.TextField(blank=True, null=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Campus Life')
     uploader_pseudonym = models.CharField(max_length=100, default='Anonymous Scholar')
