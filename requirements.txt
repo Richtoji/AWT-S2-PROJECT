@@ -6,5 +6,3 @@ tzdata==2026.1
 gunicorn
 whitenoise
 mysqlclient
-cloudinary
-django-cloudinary-storage
